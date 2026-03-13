@@ -8,6 +8,7 @@ import type { ExerciseProfiles, ExerciseType, PersistedAppState } from '../types
 interface SettingsPanelProps {
   state: PersistedAppState;
   onToggleVibration: (enabled: boolean) => void;
+  onToggleSound: (enabled: boolean) => void;
   onToggleReducedMotion: (enabled: boolean) => void;
   onResetExercise: (exerciseType: ExerciseType) => void;
   onResetAll: () => void;
@@ -30,6 +31,7 @@ function downloadJsonFile(contents: string) {
 export function SettingsPanel({
   state,
   onToggleVibration,
+  onToggleSound,
   onToggleReducedMotion,
   onResetExercise,
   onResetAll,
@@ -69,12 +71,25 @@ export function SettingsPanel({
         <label className="flex min-h-16 items-center justify-between rounded-[22px] bg-white/74 px-4 py-3">
           <div>
             <p className="font-medium text-ink">Vibration légère</p>
-            <p className="text-sm text-ink/58">Utilise la vibration quand le navigateur la supporte.</p>
+            <p className="text-sm text-ink/58">Pattern distinct pour contracter, relâcher et signaler la fin.</p>
           </div>
           <input
             type="checkbox"
             checked={state.settings.vibrationEnabled}
             onChange={(event) => onToggleVibration(event.target.checked)}
+            className="h-5 w-5 accent-[#6c8b78]"
+          />
+        </label>
+
+        <label className="flex min-h-16 items-center justify-between rounded-[22px] bg-white/74 px-4 py-3">
+          <div>
+            <p className="font-medium text-ink">Sons guidés</p>
+            <p className="text-sm text-ink/58">Trois signatures sonores pour contraction, relâchement et fin.</p>
+          </div>
+          <input
+            type="checkbox"
+            checked={state.settings.soundEnabled}
+            onChange={(event) => onToggleSound(event.target.checked)}
             className="h-5 w-5 accent-[#6c8b78]"
           />
         </label>

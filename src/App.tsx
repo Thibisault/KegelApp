@@ -17,6 +17,7 @@ import {
 import { generateSession } from './domain/generation';
 import { useAppState } from './hooks/useAppState';
 import { usePwaInstall } from './hooks/usePwaInstall';
+import { primeSessionCueAudio } from './lib/sessionCues';
 import type {
   ExerciseType,
   GeneratedSession,
@@ -70,6 +71,9 @@ export default function App() {
 
   function handleStart(exerciseType: ExerciseType) {
     const duration = state.settings.favoriteDurationMinutes;
+    if (state.settings.soundEnabled) {
+      primeSessionCueAudio();
+    }
     const session = buildSessionForExercise(exerciseType, duration, state);
     setScreen({ kind: 'session', session });
   }
@@ -107,6 +111,7 @@ export default function App() {
       <SessionPlayer
         session={screen.session}
         vibrationEnabled={state.settings.vibrationEnabled}
+        soundEnabled={state.settings.soundEnabled}
         reducedMotion={state.settings.reducedMotion}
         onComplete={(actualDurationSeconds) =>
           handleSessionComplete(screen.session, actualDurationSeconds)
@@ -255,6 +260,7 @@ export default function App() {
           <SettingsPanel
             state={state}
             onToggleVibration={(enabled) => actions.updateSetting('vibrationEnabled', enabled)}
+            onToggleSound={(enabled) => actions.updateSetting('soundEnabled', enabled)}
             onToggleReducedMotion={(enabled) => actions.updateSetting('reducedMotion', enabled)}
             onResetExercise={(exerciseType) => actions.resetExercise(exerciseType)}
             onResetAll={() => actions.resetAll()}

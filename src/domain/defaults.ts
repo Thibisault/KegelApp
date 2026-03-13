@@ -5,6 +5,7 @@ export function getDefaultSettings(): AppSettings {
   return {
     favoriteDurationMinutes: 5,
     vibrationEnabled: true,
+    soundEnabled: true,
     reducedMotion: false,
   };
 }
@@ -17,4 +18,3 @@ export function createDefaultAppState(): PersistedAppState {
     history: [],
   };
 }
-

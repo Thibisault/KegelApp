@@ -24,6 +24,10 @@ function sanitizeSettings(settings: Partial<AppSettings> | undefined): AppSettin
       typeof settings?.vibrationEnabled === 'boolean'
         ? settings.vibrationEnabled
         : defaults.vibrationEnabled,
+    soundEnabled:
+      typeof settings?.soundEnabled === 'boolean'
+        ? settings.soundEnabled
+        : defaults.soundEnabled,
     reducedMotion:
       typeof settings?.reducedMotion === 'boolean' ? settings.reducedMotion : defaults.reducedMotion,
   };

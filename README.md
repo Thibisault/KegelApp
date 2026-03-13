@@ -11,6 +11,7 @@ Important: cette application est conçue pour une routine de bien-être personne
 - Compatible GitHub Pages avec base path `/KegelApp/`
 - Aucun backend, aucun compte, aucun service distant
 - Persistance locale via `localStorage`
+- Vibrations guidées et sons distincts pour contraction, relâchement et fin de séance
 - 4 exercices uniquement: `Rapides`, `Longues`, `Relaxation`, `Mixte`
 - Génération de séance pure et adaptation douce par exercice
 - Historique léger, préférences simples, export/import JSON, reset par exercice ou global
@@ -62,8 +63,9 @@ Le projet est déjà configuré pour produire un build avec le bon `base path` p
 
 - Orientation prioritaire: portrait
 - Safe areas prises en compte
-- Vibration légère activable si le navigateur la supporte
-- Sans vibration, l’application fonctionne normalement
+- Vibrations guidées activables si le navigateur les supporte
+- Sons guidés générés via Web Audio API, sans fichier audio externe
+- Sans vibration ou sans son, l’application fonctionne normalement
 
 ## Scripts npm
 
@@ -165,6 +167,7 @@ Chaque exercice possède son profil interne propre dans le stockage local. L’a
 
 - préférences utilisateur
 - durée favorite
+- activation des sons guidés
 - profils adaptatifs par exercice
 - historique des séances
 - derniers ressentis via l’historique
@@ -182,4 +185,4 @@ Le stockage est sérialisé en JSON dans `localStorage`, et peut être exporté/
 - test pause / reprise / quitter
 - test accéléré jusqu’à l’écran de feedback
 - test d’enregistrement dans l’historique et mise à jour des statistiques
-
+- test simulé des vibrations et des sons distincts pour contraction, relâchement et fin de séance

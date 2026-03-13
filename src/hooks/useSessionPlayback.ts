@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { triggerCompletionCue, triggerSegmentCue } from '../lib/sessionCues';
 import type { GeneratedSession, SessionSegment } from '../types/app';
 
 type PlaybackStatus = 'running' | 'paused' | 'completed';
@@ -7,6 +8,7 @@ type PlaybackStatus = 'running' | 'paused' | 'completed';
 interface UseSessionPlaybackOptions {
   session: GeneratedSession;
   vibrationEnabled: boolean;
+  soundEnabled: boolean;
   onComplete: (actualDurationSeconds: number) => void;
 }
 
@@ -18,6 +20,7 @@ function findSegmentIndex(cumulativeDurationsMs: number[], elapsedMs: number) {
 export function useSessionPlayback({
   session,
   vibrationEnabled,
+  soundEnabled,
   onComplete,
 }: UseSessionPlaybackOptions) {
   const [status, setStatus] = useState<PlaybackStatus>('running');
@@ -32,6 +35,7 @@ export function useSessionPlayback({
   const currentSegmentIndexRef = useRef(0);
   const onCompleteRef = useRef(onComplete);
   const vibrationEnabledRef = useRef(vibrationEnabled);
+  const soundEnabledRef = useRef(soundEnabled);
 
   const cumulativeDurationsMs = useMemo(() => {
     return session.segments.reduce<number[]>((durations, segment) => {
@@ -58,22 +62,15 @@ export function useSessionPlayback({
     vibrationEnabledRef.current = vibrationEnabled;
   }, [vibrationEnabled]);
 
-  function vibrateForSegment(segment: SessionSegment) {
-    if (
-      !vibrationEnabledRef.current ||
-      typeof navigator === 'undefined' ||
-      !('vibrate' in navigator)
-    ) {
-      return;
-    }
+  useEffect(() => {
+    soundEnabledRef.current = soundEnabled;
+  }, [soundEnabled]);
 
-    const pattern =
-      segment.kind === 'contract' || segment.kind === 'hold'
-        ? 28
-        : segment.kind === 'transition'
-          ? [20, 30, 20]
-          : 16;
-    navigator.vibrate(pattern);
+  function playSegmentCue(segment: SessionSegment) {
+    triggerSegmentCue(segment, {
+      vibrationEnabled: vibrationEnabledRef.current,
+      soundEnabled: soundEnabledRef.current,
+    });
   }
 
   useEffect(() => {
@@ -85,13 +82,17 @@ export function useSessionPlayback({
       if (startTimeRef.current === null) {
         startTimeRef.current = timestamp;
         currentSegmentIndexRef.current = 0;
-        vibrateForSegment(session.segments[0]);
+        playSegmentCue(session.segments[0]);
       }
 
       const effectiveElapsed = timestamp - startTimeRef.current - totalPausedMsRef.current;
       if (effectiveElapsed >= session.totalDurationSeconds * 1000) {
         if (!didCompleteRef.current) {
           didCompleteRef.current = true;
+          triggerCompletionCue({
+            vibrationEnabled: vibrationEnabledRef.current,
+            soundEnabled: soundEnabledRef.current,
+          });
           setStatus('completed');
           setElapsedMs(session.totalDurationSeconds * 1000);
           onCompleteRef.current(session.totalDurationSeconds);
@@ -103,7 +104,7 @@ export function useSessionPlayback({
       if (currentSegmentIndexRef.current !== nextSegmentIndex) {
         currentSegmentIndexRef.current = nextSegmentIndex;
         setCurrentSegmentIndex(nextSegmentIndex);
-        vibrateForSegment(session.segments[nextSegmentIndex]);
+        playSegmentCue(session.segments[nextSegmentIndex]);
       }
       setElapsedMs(effectiveElapsed);
       frameRef.current = requestAnimationFrame(step);

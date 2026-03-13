@@ -113,6 +113,7 @@ export interface SessionHistoryEntry {
 export interface AppSettings {
   favoriteDurationMinutes: SessionDurationMinutes;
   vibrationEnabled: boolean;
+  soundEnabled: boolean;
   reducedMotion: boolean;
 }
 
@@ -137,4 +138,3 @@ export interface AppStats {
   streakDays: number;
   lastSevenDays: number;
 }
-

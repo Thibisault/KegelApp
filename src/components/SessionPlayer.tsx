@@ -8,6 +8,7 @@ import type { GeneratedSession } from '../types/app';
 interface SessionPlayerProps {
   session: GeneratedSession;
   vibrationEnabled: boolean;
+  soundEnabled: boolean;
   reducedMotion: boolean;
   onComplete: (actualDurationSeconds: number) => void;
   onQuit: () => void;
@@ -16,6 +17,7 @@ interface SessionPlayerProps {
 export function SessionPlayer({
   session,
   vibrationEnabled,
+  soundEnabled,
   reducedMotion,
   onComplete,
   onQuit,
@@ -31,6 +33,7 @@ export function SessionPlayer({
   } = useSessionPlayback({
     session,
     vibrationEnabled,
+    soundEnabled,
     onComplete,
   });
 

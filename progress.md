@@ -15,3 +15,5 @@ Original prompt: Créer une application personnelle Kegel / plancher pelvien en 
   - test Playwright mobile: accueil, démarrage de séance, pause/reprise, quitter, feedback, retour accueil, mise à jour stats/historique
 - Incident corrigé pendant la validation: crash runtime dans `SessionPlayer` causé par une mauvaise utilisation de `useEffectEvent`, remplacé par une boucle `requestAnimationFrame` plus sûre.
 - Point restant à surveiller plus tard si besoin: `npm audit` signale 4 vulnérabilités hautes dans la chaîne de dépendances transitive, sans bloquer le build actuel.
+- Ajout ultérieur: cues haptiques et sonores distincts pour `contract`, `release/exhale` et `fin de séance`, avec Web Audio API sans assets externes et nouveau réglage `Sons guidés`.
+- Validation supplémentaire: simulation Playwright avec stub `navigator.vibrate` et faux `AudioContext`, confirmant les trois familles de cues et leurs patterns distincts.
